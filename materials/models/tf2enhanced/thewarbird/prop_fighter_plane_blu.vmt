@@ -1,0 +1,46 @@
+"VertexlitGeneric"
+{
+	"$basetexture" "models\tf2Enhanced\TheWarBird/prop_fighter_plane_blu"
+	"$bumpmap"	"models\tf2Enhanced\normal"
+
+	"$nocull" 1
+
+	"$basemapalphaphongmask" "1"
+
+	"$phong" "3"
+	"$phongexponent" "30"
+	"$phongboost" "10"
+	"$lightwarptexture" "models\tf2Enhanced/pickup_lightwarp"
+
+
+	"$phongfresnelranges"	"[.25 .5 1]"
+
+	"$rimlight" "2"						
+	"$rimlightexponent" "20"				
+	"$rimlightboost" ".25"
+
+	"$glowcolor" "1"
+
+	// Cloaking
+	"$cloakPassEnabled" "1"
+	"Proxies"
+	{
+		"weapon_invis"
+		{
+		}
+		"ModelGlowColor"
+		{
+			"resultVar" "$glowcolor"
+		}
+		"Equals"
+		{
+			"srcVar1"  "$glowcolor"
+			"resultVar" "$selfillumtint"
+		}
+		"Equals"
+		{
+			"srcVar1"  "$glowcolor"
+			"resultVar" "$color2"
+		}
+	}
+}
