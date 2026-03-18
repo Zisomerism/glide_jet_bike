@@ -31,6 +31,7 @@ function ENT:OnPostInitialize()
     -- and variables that effect or are effected by jetbikes
     -- starting here
     self:SetThrustMaxSpeed( 3000 )
+    self:SetAirThrustReductionFactor( 26 )
     self:SetThrustReductionFactor( 26 )
 
     -- The jet engine uses your current RPM + your current throttle for thrust
@@ -238,11 +239,11 @@ function ENT:OnSimulatePhysics( phys, _, outLin, outAng )
 
 
     -- Engine force
-    local rpm = self:GetEngineRPM() / self:GetThrustReductionFactor()
+    local thrust = self:GetEngineRPM() / ( isAnyWheelGrounded and self:GetThrustReductionFactor() or self:GetAirThrustReductionFactor() )
     local throttle = self:GetEngineThrottle()
     if throttle > 0 and speed < self:GetThrustMaxSpeed() then
         -- Forward acceleration
-        local f = fw * throttle * rpm
+        local f = fw * throttle * thrust
         outLin[1] = outLin[1] + f[1] * mass
         outLin[2] = outLin[2] + f[2] * mass
         outLin[3] = outLin[3] + f[3] * mass

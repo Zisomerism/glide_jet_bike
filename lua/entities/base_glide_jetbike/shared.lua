@@ -21,6 +21,7 @@ ENT.UneditableNWVars = {
 function ENT:SetupDataTables()
     BaseClass.SetupDataTables( self )
     self:NetworkVar( "Int", "ThrustMaxSpeed" )
+    self:NetworkVar( "Int", "AirThrustReductionFactor" )
     self:NetworkVar( "Int", "ThrustReductionFactor" )
 end
 

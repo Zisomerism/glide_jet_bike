@@ -3,103 +3,77 @@ AddCSLuaFile()
 ENT.Type = "anim"
 ENT.Base = "base_glide_jetbike"
 ENT.PrintName = "test jetbike"
-ENT.Author = "desu"
 
 ENT.GlideCategory = "Default"
-ENT.ChassisModel = "models/desu/vehicles/lonewanderer/lonewanderer.mdl"
+ENT.ChassisModel = "models/gta5/vehicles/sanchez/chassis.mdl"
 
 DEFINE_BASECLASS( "base_glide_jetbike" )
 
 -- Override the default first person offset for all seats
 function ENT:GetFirstPersonOffset( _, localEyePos )
-    localEyePos[3] = localEyePos[3] - 4
-
     return localEyePos
 end
 
 if CLIENT then
-    ENT.CameraOffset = Vector( -200, 0, 60 )
-    ENT.WheelSkidmarkScale = 0.45
+    ENT.CameraOffset = Vector( -170, 0, 50 )
     ENT.StartSound = "Glide.Engine.BikeStart1"
 
+    ENT.AfterburnerOrigin = Vector( -40, -4.4, 14.5 )
+
     ENT.ExhaustOffsets = {
-        { pos = Vector( -42, 0, 23.5 ), scale = 1 },
-        { pos = Vector( -40, 0, 23.5 ), scale = 0.5 }
+        { pos = Vector( -40, -4.4, 14.5 ), angle = Angle( 10, 0, 0 ), scale = 0.7 }
     }
 
     ENT.EngineSmokeStrips = {
-        { offset = Vector( -40.2, 0, 23.5 ), angle = Angle( 40, 180, 0 ), width = 2 }
+        { offset = Vector( 5, 0, 5 ), angle = Angle( 40, 180, 0 ), width = 15 }
     }
 
     ENT.EngineFireOffsets = {
-        { offset = Vector( -28, 5, 24 ), angle = Angle( 90, 90, 0 ), scale = 0.4 },
-        { offset = Vector( -10, -5, 10 ), angle = Angle( 90, 270, 0 ), scale = 0.4 }
+        { offset = Vector( -3, 5, 5 ), angle = Angle( 90, 90, 0 ), scale = 0.4 },
+        { offset = Vector( -3, -5, 5 ), angle = Angle( 90, 270, 0 ), scale = 0.4 }
     }
 
     ENT.LightSprites = {
-        { type = "brake", offset = Vector( -45.5, 0, 13 ), dir = Vector( -1, 0, 0 ), lightRadius = 50 },
-        { type = "taillight", offset = Vector( -45.5, 0, 13 ), dir = Vector( -1, 0, 0 ), size = 15 },
-        { type = "headlight", offset = Vector( 27, 0, 31 ), dir = Vector( 1, 0, 0 ) }
+        { type = "brake", offset = Vector( -43, 0, 17.5 ), dir = Vector( -1, 0, 0 ), lightRadius = 50 },
+        { type = "taillight", offset = Vector( -43, 0, 17.5 ), dir = Vector( -1, 0, 0 ), size = 15 },
+        { type = "headlight", offset = Vector( 26, 0, 19.6 ), dir = Vector( 1, 0, 0 ) }
     }
 
     ENT.Headlights = {
-        { offset = Vector( 28, 0, 31 ) }
+        { offset = Vector( 29, 0, 27 ) }
     }
+
+    ENT.StoppedSound = "Glide.Sanchez.EngineStop"
+
+    Glide.AddSoundSet( "Glide.Sanchez.EngineStop", 80, 100, 100, {
+        "glide/streams/sanchez/turn_off_1.wav",
+        "glide/streams/sanchez/turn_off_2.wav"
+    } )
 
     function ENT:OnCreateEngineStream( stream )
         stream.offset = Vector( 5, 0, 0 )
         stream:LoadPreset( "sanchez" )
     end
 
-    local DRIVER_POSE_DATA = {
-        ["ValveBiped.Bip01_L_UpperArm"] = Angle( -20, 35, -15 ),
-        ["ValveBiped.Bip01_L_Forearm"] = Angle( 20, -10, -80 ),
-        ["ValveBiped.Bip01_R_UpperArm"] = Angle( 20, 40, 30 ),
-        ["ValveBiped.Bip01_R_Forearm"] = Angle( -20, -18, 80 ),
-
-        ["ValveBiped.Bip01_L_Thigh"] = Angle( -10, -12, 20 ),
-        ["ValveBiped.Bip01_L_Calf"] = Angle( -5, 50, 0 ),
-        ["ValveBiped.Bip01_L_Foot"] = Angle( 0, -40, 0 ),
-
-        ["ValveBiped.Bip01_R_Thigh"] = Angle( 10, -12, -20 ),
-        ["ValveBiped.Bip01_R_Calf"] = Angle( 5, 50, 0 ),
-        ["ValveBiped.Bip01_R_Foot"] = Angle( 0, -40, 0 ),
-    }
-
-    function ENT:GetSeatBoneManipulations()
-        return DRIVER_POSE_DATA
-    end
-
     function ENT:OnActivateMisc()
         BaseClass.OnActivateMisc( self )
 
-        self.frontBoneId = self:LookupBone( "wheel_f" )
-        self.rearBoneId = self:LookupBone( "wheel_r" )
-        self.throttleId = self:LookupBone( "throttle" )
-        self.kickstandId = self:LookupBone( "kickstand" )
+        self.frontBoneId = self:LookupBone( "front_wheel" )
+        self.rearBoneId = self:LookupBone( "rear_wheel" )
     end
 
-    local kickstandAng = Angle()
-    local FrameTime = FrameTime
-    local ExpDecayAngle = Glide.ExpDecayAngle
-    local decay = 5
-
-    function ENT:OnUpdateMisc()
-        BaseClass.OnUpdateMisc( self )
-        if LocalPlayer() ~= self:GetDriver() then return end
-        local resting = self:GetVelocity():Length() < 30
-        local dt = FrameTime()
-        kickstandAng[1] = ExpDecayAngle( kickstandAng[1], resting and -90 or 0, decay, dt )
-        self:ManipulateBoneAngles( self.kickstandId, kickstandAng, false )
-    end
-
+    local Abs = math.abs
     local spinAng = Angle()
-    local throttleAng = Angle()
 
     function ENT:OnUpdateAnimations()
         -- Call the base class' `OnUpdateAnimations`
         -- to automatically update the steering pose parameter.
         BaseClass.OnUpdateAnimations( self )
+
+        -- Manually update the suspension pose parameters
+        self:SetPoseParameter( "suspension_front", 1 - ( Abs( self:GetWheelOffset( 1 ) ) / 7 ) )
+        self:SetPoseParameter( "suspension_rear", 1 - ( Abs( self:GetWheelOffset( 2 ) ) / 7 ) )
+        self:InvalidateBoneCache()
 
         if not self.frontBoneId then return end
 
@@ -110,12 +84,7 @@ if CLIENT then
 
         spinAng[3] = -self:GetWheelSpin( 2 )
         self:ManipulateBoneAngles( self.rearBoneId, spinAng, false )
-
-        throttleAng[1] = self:GetEngineThrottle() * 90
-        self:ManipulateBoneAngles( self.throttleId, throttleAng, false )
     end
-
-    ENT.AfterburnerOrigin = Vector( -40.2, 0, 23.5 )
 
     local Effect = util.Effect
     function ENT:OnUpdateParticles()
@@ -129,7 +98,7 @@ if CLIENT then
         eff:SetEntity( self )
         eff:SetOrigin( self:LocalToWorld( self.AfterburnerOrigin ) )
         eff:SetAngles( self:GetAngles() )
-        eff:SetScale( 0.25 )
+        eff:SetScale( 0.1 )
         eff:SetMagnitude( rpm / self:GetMaxRPM() )
         Effect( "glide_afterburner", eff, true )
 
@@ -141,36 +110,19 @@ if CLIENT then
 end
 
 if SERVER then
-    ENT.SpawnPositionOffset = Vector( 0, 0, 30 )
-    ENT.StartupTime = 0.5
-
-    ENT.BurnoutForce = 55
-    ENT.WheelieForce = 400
-
-    function ENT:InitializePhysics()
-        self:SetSolid( SOLID_VPHYSICS )
-        self:SetMoveType( MOVETYPE_VPHYSICS )
-        self:PhysicsInit( SOLID_VPHYSICS, Vector( 0, 0, 0 ) )
-    end
+    ENT.SpawnPositionOffset = Vector( 0, 0, 40 )
+    ENT.StartupTime = 0.4
+    ENT.BurnoutForce = 50
 
     ENT.LightBodygroups = {
-        { type = "headlight", bodyGroupId = 2, subModelId = 1 },
+        { type = "headlight", bodyGroupId = 6, subModelId = 1 },
+        { type = "brake_or_taillight", bodyGroupId = 7, subModelId = 1 }
     }
 
-    function ENT:GetGears()
-        return {
-            [0] = 0, -- Neutral (this number has no effect)
-            [1] = 3.0,
-            [2] = 1.55,
-            [3] = 1.1,
-            [4] = 0.9,
-            [5] = 0.75,
-            [6] = 0.68
-        }
-    end
-
     function ENT:CreateFeatures()
-        self:SetThrustReductionFactor( 10 )
+        self:SetAirThrustReductionFactor( 5 )
+        self:SetThrustReductionFactor( 30 )
+
         self:SetDifferentialRatio( 0.55 )
         self:SetPowerDistribution( -1 )
         self:SetTransmissionEfficiency( 0.7 )
@@ -181,18 +133,20 @@ if SERVER then
         self:SetMinRPMTorque( 1500 )
         self:SetMaxRPMTorque( 1800 )
 
-        self:SetSpringStrength( 700 )
+        self:SetSpringStrength( 600 )
         self:SetSpringDamper( 3000 )
-        self:SetSuspensionLength( 8 )
-        self:CreateSeat( Vector( -22, 0, 21 ), Angle( 0, 270, -16 ), Vector( 0, 60, 0 ), true )
+        self:SetSuspensionLength( 7 )
+
+        self:CreateSeat( Vector( -17, 0, 12 ), Angle( 0, 270, -16 ), Vector( 0, 60, 0 ), true )
+        self:CreateSeat( Vector( -26, 0, 12 ), Angle( 0, 270, -5 ), Vector( 0, -60, 0 ), true )
 
         -- Front
-        self:CreateWheel( Vector( 39, 0, 12 ), {
+        self:CreateWheel( Vector( 36, 0, -1 ), {
             steerMultiplier = 1
         } )
 
         -- Rear
-        self:CreateWheel( Vector( -32, 0, 12 ) )
+        self:CreateWheel( Vector( -29, 0, -1 ) )
 
         -- Since the model already has a visual representation
         -- for the wheels, hide the actual wheels.
@@ -200,11 +154,20 @@ if SERVER then
             Glide.HideEntity( w, true )
         end
 
-        self:ChangeWheelRadius( 13 )
+        self:ChangeWheelRadius( 14 )
     end
 
-    function ENT:GetSpawnColor()
-        return self.Color
+    function ENT:GetGears()
+        return {
+            [-1] = 2.5, -- Reverse
+            [0] = 0, -- Neutral (this number has no effect)
+            [1] = 2.8,
+            [2] = 1.7,
+            [3] = 1.2,
+            [4] = 0.9,
+            [5] = 0.75,
+            [6] = 0.7
+        }
     end
 
 end

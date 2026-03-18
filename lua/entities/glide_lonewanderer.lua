@@ -21,6 +21,8 @@ if CLIENT then
     ENT.CameraOffset = Vector( -200, 0, 60 )
     ENT.WheelSkidmarkScale = 0.45
 
+    ENT.AfterburnerOrigin = Vector( -40.2, 0, 23.5 )
+
     ENT.ExhaustOffsets = {
         { pos = Vector( -42, 0, 23.5 ), scale = 1 },
         { pos = Vector( -40, 0, 23.5 ), scale = 0.5 }
@@ -113,8 +115,6 @@ if CLIENT then
         throttleAng[1] = self:GetEngineThrottle() * 90
         self:ManipulateBoneAngles( self.throttleId, throttleAng, false )
     end
-
-    ENT.AfterburnerOrigin = Vector( -40.2, 0, 23.5 )
 
     local Effect = util.Effect
     function ENT:OnUpdateParticles()
