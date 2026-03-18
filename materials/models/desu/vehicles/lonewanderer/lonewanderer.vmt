@@ -8,7 +8,7 @@ VertexlitGeneric
 	"$envmap"			"env_cubemap"
 	"$envmapfresnel" "1"
 	"$fresnelreflection" "0.2"
-	"$envmaptint" ".04 .04 .04"
+	"$envmaptint" "[.1 .1 .1]"
     "$normalmapalphaenvmapmask" "1"
 
     "$phong" "1"	
@@ -19,6 +19,6 @@ VertexlitGeneric
 	"$rimlight" "1"
 	"$rimlightexponent" "10"
 	"$rimlightboost" "0.2"			
-    "$phongtint" 	".8 .8 .8"							
+    "$phongtint" 	"[.8 .8 .8]"							
  
 }
