@@ -2,7 +2,7 @@ AddCSLuaFile()
 
 ENT.Type = "anim"
 ENT.Base = "base_glide_jetbike"
-ENT.PrintName = "test jetbike"
+ENT.PrintName = "Jet Sanchez"
 
 ENT.GlideCategory = "Default"
 ENT.ChassisModel = "models/gta5/vehicles/sanchez/chassis.mdl"
