@@ -1,0 +1,24 @@
+VertexlitGeneric
+{ 
+    "$basetexture"     "models\desu\vehicles\lonewanderer\lonewanderer_rebake" 
+    "$bumpmap"        "models\desu\vehicles\lonewanderer\lonewanderer_n_rebake"
+
+    "$surfaceprop"     metal 
+
+	"$envmap"			"env_cubemap"
+	"$envmapfresnel" "1"
+	"$fresnelreflection" "0.2"
+	"$envmaptint" ".04 .04 .04"
+    "$normalmapalphaenvmapmask" "1"
+
+    "$phong" "1"	
+    "$phongexponenttexture" "models\desu\vehicles\lonewanderer\lonewanderer_exp_mask"	
+	"$phongboost"				"10"
+	"$phongfresnelranges"		"[0 0.5 0.5]"
+
+	"$rimlight" "1"
+	"$rimlightexponent" "10"
+	"$rimlightboost" "0.2"			
+    "$phongtint" 	".8 .8 .8"							
+ 
+}

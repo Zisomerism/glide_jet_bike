@@ -1,0 +1,6 @@
+VertexlitGeneric
+{ 
+    "$basetexture"     "models\desu\vehicles\lonewanderer\lonewanderer_dirty_base" 
+    "$bumpmap"        "models\desu\vehicles\lonewanderer\lonewanderer_n_rebake"
+}
+
