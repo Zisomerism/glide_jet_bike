@@ -20,6 +20,7 @@ end
 if CLIENT then
     ENT.CameraOffset = Vector( -200, 0, 60 )
     ENT.WheelSkidmarkScale = 0.45
+    ENT.StartSound = "Glide.Engine.BikeStart1"
 
     ENT.ExhaustOffsets = {
         { pos = Vector( -42, 0, 23.5 ), scale = 1 },
@@ -47,7 +48,7 @@ if CLIENT then
 
     function ENT:OnCreateEngineStream( stream )
         stream.offset = Vector( 5, 0, 0 )
-        stream:LoadPreset( "lonewanderer" )
+        stream:LoadPreset( "sanchez" )
     end
 
     local DRIVER_POSE_DATA = {
@@ -156,22 +157,33 @@ if SERVER then
         { type = "headlight", bodyGroupId = 2, subModelId = 1 },
     }
 
+    function ENT:GetGears()
+        return {
+            [0] = 0, -- Neutral (this number has no effect)
+            [1] = 3.0,
+            [2] = 1.55,
+            [3] = 1.1,
+            [4] = 0.9,
+            [5] = 0.75,
+            [6] = 0.68
+        }
+    end
+
     function ENT:CreateFeatures()
-        self:SetBrakePower( 2400 )
-        self:SetMaxSteerAngle( 25 )
+        self:SetThrustReductionFactor( 10 )
+        self:SetDifferentialRatio( 0.55 )
+        self:SetPowerDistribution( -1 )
+        self:SetTransmissionEfficiency( 0.7 )
+        self:SetBrakePower( 2000 )
 
-        self:SetForwardTractionMax( 2600 )
-        self:SetSideTractionMultiplier( 60 )
-        self:SetSideTractionMaxAng( 60 )
-        self:SetSideTractionMin( 1000 )
-
-        self:SetMinRPM( 3000 )
-        self:SetMaxRPM( 12000 )
+        self:SetMinRPM( 500 )
+        self:SetMaxRPM( 6000 )
+        self:SetMinRPMTorque( 1500 )
+        self:SetMaxRPMTorque( 1800 )
 
         self:SetSpringStrength( 700 )
         self:SetSpringDamper( 3000 )
         self:SetSuspensionLength( 8 )
-
         self:CreateSeat( Vector( -22, 0, 21 ), Angle( 0, 270, -16 ), Vector( 0, 60, 0 ), true )
 
         -- Front
