@@ -2,7 +2,7 @@ AddCSLuaFile()
 
 ENT.Type = "anim"
 ENT.Base = "base_glide_jetbike"
-ENT.PrintName = "Lone Wanderer"
+ENT.PrintName = "test jetbike"
 ENT.Author = "desu"
 
 ENT.GlideCategory = "Default"

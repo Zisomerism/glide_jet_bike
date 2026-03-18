@@ -26,12 +26,21 @@ function ENT:OnPostInitialize()
     self:SetSideTractionMaxAng( 40 )
     self:SetSideTractionMax( 2000 )
 
-    -- Jetbike specific variables
-    self:SetMaxSpeed( 3000 )
 
-    -- Variables with weird defaults or that don't matter because jetbike
+    -- Jetbike specific variables 
+    -- and variables that effect or are effected by jetbikes
+    -- starting here
+    self:SetThrustMaxSpeed( 3000 )
+    self:SetThrustReductionFactor( 26 )
+
+    -- The jet engine uses your current RPM + your current throttle for thrust
+    -- so only MinRPM/MaxRPM matter for power range
     self:SetMinRPM( 3000 )
     self:SetMaxRPM( 12000 )
+
+    -- These obviously still function as they normally would
+    -- you can choose to not use these at all since there's a giant jet engine on the back
+    -- even if you want the effect of a full jet powered bike having some torque helps when starting out
     self:SetMinRPMTorque( 100 )
     self:SetMaxRPMTorque( 100 )
     self:SetDifferentialRatio( 2 )
@@ -229,9 +238,9 @@ function ENT:OnSimulatePhysics( phys, _, outLin, outAng )
 
 
     -- Engine force
-    local rpm = self:GetEngineRPM() / 26
+    local rpm = self:GetEngineRPM() / self:GetThrustReductionFactor()
     local throttle = self:GetEngineThrottle()
-    if throttle > 0 and speed < self:GetMaxSpeed() then
+    if throttle > 0 and speed < self:GetThrustMaxSpeed() then
         -- Forward acceleration
         local f = fw * throttle * rpm
         outLin[1] = outLin[1] + f[1] * mass
