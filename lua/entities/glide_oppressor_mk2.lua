@@ -88,28 +88,27 @@ end
 
 if SERVER then
     ENT.SpawnPositionOffset = Vector( 0, 0, 60 )
-    ENT.StartupTime = 0.4
-    ENT.BurnoutForce = 50
+    ENT.StartupTime = 2
 
     ENT.HoverParams = {
-        linearDrag = Vector( 1, 1.5, 2.0 ), -- (Forward, right, up)
-        angularDrag = Vector( -1, -5, -1 ), -- (Roll, pitch, yaw)
+        linearDrag = Vector( 1, 1.5, 1.5 ), -- (Forward, right, up)
+        angularDrag = Vector( -1, -1, -1 ), -- (Roll, pitch, yaw)
 
-        hoverForce = 10,         -- How strong is the hover force on each hover point?
-        hoverDistance = 20,     -- How far from surfaces each hover point has to be for the `hoverForce` to fully apply?
-        hoverZDrag = 0.03,       -- Extra upwards drag to apply on each hover point
+        hoverForce = 16,         -- How strong is the hover force on each hover point?
+        hoverDistance = 100,     -- How far from surfaces each hover point has to be for the `hoverForce` to fully apply?
+        hoverZDrag = 0.04,       -- Extra upwards drag to apply on each hover point
 
         maxSpeed = 1700,        -- Stop applying `engineForce` once the vehicle hits this speed
         engineForce = 450,
         turnForce = 200,
-        pitchForce = 600,
+        pitchForce = 400,
         uprightForce = 600
     }
 
     function ENT:InitializePhysics()
         self:SetSolid( SOLID_VPHYSICS )
         self:SetMoveType( MOVETYPE_VPHYSICS )
-        self:PhysicsInit( SOLID_VPHYSICS, Vector( 0, 0, -18 ) )
+        self:PhysicsInit( SOLID_VPHYSICS, Vector( 0, 0, 0 ) )
     end
 
     ENT.LightBodygroups = {
@@ -124,11 +123,6 @@ if SERVER then
         self:SetThrustReductionFactor( 30 )
         self:SetBrakePower( 2400 )
         self:SetMaxSteerAngle( 25 )
-
-        self:SetForwardTractionMax( 0 )
-        self:SetSideTractionMultiplier( 0 )
-        self:SetSideTractionMin( 0 )
-        self:SetSideTractionMax( 0 )
 
         self:SetMinRPM( 300 )
         self:SetMaxRPM( 6000 )
@@ -188,8 +182,8 @@ if SERVER then
         local size = ( maxs - mins ) * 0.5
 
         local spacingX = 0.5
-        local spacingY = 0.5
-        local offsetZ = -18
+        local spacingY = 0.4
+        local offsetZ = 0
 
         center[3] = -size[3] * 0.5
 
