@@ -32,11 +32,11 @@ if CLIENT then
     }
 
     ENT.LightSprites = {
-        { type = "headlight", offset = Vector( 26, 0, 19.6 ), dir = Vector( 1, 0, 0 ) }
+        { type = "headlight", offset = Vector( 45, 0, 18.4 ), dir = Vector( 1, 0, 0 ) }
     }
 
     ENT.Headlights = {
-        { offset = Vector( 29, 0, 27 ) }
+        { offset = Vector( 48, 0, 18.4 ) }
     }
 
     function ENT:OnCreateEngineStream( stream )
@@ -95,14 +95,14 @@ if SERVER then
         linearDrag = Vector( 1, 1.5, 2.0 ), -- (Forward, right, up)
         angularDrag = Vector( -1, -5, -1 ), -- (Roll, pitch, yaw)
 
-        hoverForce = 8,         -- How strong is the hover force on each hover point?
-        hoverDistance = 100,     -- How far from surfaces each hover point has to be for the `hoverForce` to fully apply?
-        hoverZDrag = 0,       -- Extra upwards drag to apply on each hover point
+        hoverForce = 10,         -- How strong is the hover force on each hover point?
+        hoverDistance = 20,     -- How far from surfaces each hover point has to be for the `hoverForce` to fully apply?
+        hoverZDrag = 0.03,       -- Extra upwards drag to apply on each hover point
 
         maxSpeed = 1700,        -- Stop applying `engineForce` once the vehicle hits this speed
         engineForce = 450,
         turnForce = 200,
-        pitchForce = 300,
+        pitchForce = 600,
         uprightForce = 600
     }
 
@@ -113,7 +113,7 @@ if SERVER then
     end
 
     ENT.LightBodygroups = {
-        { type = "headlight", bodyGroupId = 5, subModelId = 1 }
+        { type = "headlight", bodyGroupId = 2, subModelId = 1 }
     }
 
     function ENT:CreateFeatures()
@@ -125,10 +125,10 @@ if SERVER then
         self:SetBrakePower( 2400 )
         self:SetMaxSteerAngle( 25 )
 
-        self:SetForwardTractionMax( 2600 )
-        self:SetSideTractionMultiplier( 60 )
-        self:SetSideTractionMaxAng( 60 )
-        self:SetSideTractionMin( 1000 )
+        self:SetForwardTractionMax( 0 )
+        self:SetSideTractionMultiplier( 0 )
+        self:SetSideTractionMin( 0 )
+        self:SetSideTractionMax( 0 )
 
         self:SetMinRPM( 300 )
         self:SetMaxRPM( 6000 )
@@ -145,7 +145,22 @@ if SERVER then
             AmmoTypeShareCapacity = true,
             FireDelay = 1.0,
             ReloadDelay = 6.0,
-            ProjectileOffsets = { Vector( 150, 2, 12 ), Vector( 150, -2, 12 ) }
+            ProjectileOffsets = {
+                Vector( 150, 2, 12 ),
+                Vector( 150, -2, 12 )
+            }
+        } )
+
+        self:CreateWeapon( "base", {
+            Spread = 0.5,
+            Damage = 6,
+            TracerScale = 0.5,
+            SingleShotSound = "Glide.JB700.Fire",
+            FireDelay = 0.1,
+            ProjectileOffsets = {
+                Vector( 46, 3, 18 ),
+                Vector( 46, -3, 18 )
+                }
         } )
 
         -- Front
