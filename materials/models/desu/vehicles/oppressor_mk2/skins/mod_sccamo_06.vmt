@@ -1,0 +1,41 @@
+"VertexLitGeneric"
+{
+   "$basetexture"         "models\desu\vehicles\oppressor_mk2\skins\mod_sccamo_06"
+   "$bumpmap"             "models\desu\vehicles\oppressor_mk2\flat_normal_alt2"
+
+   "$phongexponenttexture" "models\desu\vehicles\oppressor_mk2\green" 
+	
+	$phong "1"
+	$phongboost "5"
+	$phongfresnelranges "[0.3 0.75 1.00]"
+	$phongalbedotint "1"
+	$phongexponent       5
+	
+	$lightwarptexture "models\desu\vehicles\oppressor_mk2\lightwarp_metallic"
+	
+	$nocull 1
+
+	"$blendtintbybasealpha" "1"
+    "$blendtintcoloroverbase" "0"
+	
+	$envmap "env_cubemap"
+	$envmaptint "[0.5 0.5 0.5]"
+	$normalmapalphaenvmapmask 1
+	$envmapfresnel 1
+
+		"$detail"                   "models\desu\vehicles\oppressor_mk2\Detail_metal7"
+	    "$detailblendfactor"        "0.7"
+	    "$detailscale"              "15"
+		"$detailblendmode"          "0"
+		
+	"Proxies"
+	{
+		"TextureScroll"
+		{
+			"texturescrollvar" 	         "$baseTextureTransform"
+			"texturescrollrate" 	     "0.0"
+			"texturescrollangle" 	     "0"
+			"texturescale" 		         "5.0"
+		}
+	}		
+}

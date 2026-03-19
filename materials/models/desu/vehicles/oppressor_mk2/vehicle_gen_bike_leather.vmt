@@ -1,0 +1,30 @@
+"VertexLitGeneric"
+{
+   "$basetexture"         "models\desu\vehicles\oppressor_mk2\vehicle_gen_bike_leather"
+   "$bumpmap"             "models\desu\vehicles\oppressor_mk2\vehicle_gen_bike_leather_n"
+
+   "$phongexponenttexture" "models\desu\vehicles\oppressor_mk2\green" 
+	
+	$phong "1"
+	$phongboost "10"
+	$phongfresnelranges "[0.3 0.75 1.00]"
+	$phongalbedotint "1"
+	$phongexponent       0
+	
+//	$lightwarptexture "models\desu\vehicles\oppressor_mk2\lightwarp_metallic"
+	
+	$nocull 1
+//	$color2 "{120 120 120}"
+
+	"$blendtintbybasealpha" "1"
+ 	"$blendtintcoloroverbase" "0"
+	
+	$rimlight               1
+	$rimlightexponent       1
+	$rimlightboost          15	
+
+		"$detail"                   "models\desu\vehicles\oppressor_mk2\detail_leather"
+	    "$detailblendfactor"        "0.7"
+	    "$detailscale"              "7"
+		"$detailblendmode"          "0"
+}

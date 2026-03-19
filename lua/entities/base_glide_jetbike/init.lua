@@ -30,6 +30,7 @@ function ENT:OnPostInitialize()
     -- Jetbike specific variables 
     -- and variables that effect or are effected by jetbikes
     -- starting here
+    self:SetEnableHoverBike( false )
     self:SetThrustMaxSpeed( 3000 )
     self:SetAirThrustReductionFactor( 26 )
     self:SetThrustReductionFactor( 26 )
@@ -47,6 +48,28 @@ function ENT:OnPostInitialize()
     self:SetDifferentialRatio( 2 )
     self:SetTransmissionEfficiency( 1 )
     self:SetPowerDistribution( 0 )
+
+    self:SetFlightValue( 0 )
+    -- Calculate local positions on the vehicle where hover forces are applied
+    local phys = self:GetPhysicsObject()
+    if not IsValid( phys ) then return end
+
+    local center = phys:GetMassCenter()
+    local mins, maxs = phys:GetAABB()
+    local size = ( maxs - mins ) * 0.5
+
+    local spacingX = 0.8
+    local spacingY = 0.7
+    local offsetZ = 0
+
+    center[3] = -size[3] * 0.5
+
+    self.hoverPoints = {
+        center + Vector( size[1] * spacingX, size[2] * spacingY, offsetZ ), -- Front left
+        center + Vector( size[1] * spacingX, size[2] * -spacingY, offsetZ ), -- Front right
+        center + Vector( size[1] * -spacingX, size[2] * spacingY, offsetZ ), -- Rear left
+        center + Vector( size[1] * -spacingX, size[2] * -spacingY, offsetZ ) -- Rear right
+    }
 end
 
 function ENT:SetStaySpright( toggle, dontWakePhys )
@@ -63,6 +86,9 @@ end
 function ENT:TurnOn()
     BaseClass.TurnOn( self )
     self:SetStaySpright( true )
+    if self:GetEnableHoverBike() then
+        self.IsHoverActive = true
+    end
 end
 
 --- Override this base class function.
@@ -73,6 +99,9 @@ function ENT:TurnOff()
 
     if not IsValid( driver ) and math.abs( self.totalSpeed ) > 100 then
         self:SetStaySpright( false )
+        if self:GetEnableHoverBike() then
+            self.IsHoverActive = false
+        end
     end
 end
 
@@ -177,12 +206,32 @@ end
 --- Override this base class function.
 function ENT:UpdateUnflip( _phys, _dt, _selfTbl ) end
 
+function ENT:OnPostThink( dt, selfTbl )
+    BaseClass.OnPostThink( self, dt, selfTbl )
+
+    local pitchInput = self:GetInputFloat( 1, "lean_pitch" )
+    local flight = self:GetFlightValue()
+
+    -- If the user is trying to fly up,
+    -- or none of the hover points are "touching" a surface...
+    if pitchInput < -0.1 or selfTbl.contactHoverPointCount < 1 then
+        -- Increase the flight strength
+        self:SetFlightValue( Clamp( flight + dt, 0, 1 ) )
+
+    elseif selfTbl.contactHoverPointCount > 1 then
+        -- If no pitch up input, and we have at least one hover
+        -- point trace hitting a surface, then reduce the flight strength
+        self:SetFlightValue( Clamp( flight - dt * 2, 0, 1 ) )
+    end
+
+end
+
 local mass, fw, rt
 local vel, angles, angVel, localVel
 local WORLD_UP = Vector( 0, 0, 1 )
 
 --- Override this base class function.
-function ENT:OnSimulatePhysics( phys, _, outLin, outAng )
+function ENT:OnSimulatePhysics( phys, dt, outLin, outAng )
     if not self.stayUpright then return end
     if self:IsPlayerHolding() then return end
 
@@ -195,6 +244,39 @@ function ENT:OnSimulatePhysics( phys, _, outLin, outAng )
     vel = phys:GetVelocity()
     localVel = self:WorldToLocal( phys:GetPos() + vel )
     speed = localVel[1]
+
+    -- Engine force
+    local thrust = self:GetEngineRPM() / ( isAnyWheelGrounded and self:GetThrustReductionFactor() or self:GetAirThrustReductionFactor() )
+    local throttle = self:GetEngineThrottle()
+    if throttle > 0 and speed < self:GetThrustMaxSpeed() then
+        -- Forward acceleration
+        local f = fw * throttle * thrust
+        outLin[1] = outLin[1] + f[1] * mass
+        outLin[2] = outLin[2] + f[2] * mass
+        outLin[3] = outLin[3] + f[3] * mass
+    end
+
+    -- Hover
+    if self:GetEnableHoverBike() and self.IsHoverActive then
+        self.contactHoverPointCount = self:SimulateHovercraft( 1, self:GetFlightValue(), self.hoverPoints, phys, dt, outLin, outAng )
+        return
+    end
+
+    -- Apply keep upright force depending on how much we are tilting
+    local dot = WORLD_UP:Dot( rt )
+    dot = angles[3] > -90 and angles[3] < 90 and dot or -dot
+
+    local tiltForce = isAnyWheelGrounded and self.TiltForce or self.TiltForce * 0.2
+
+    outAng[1] = outAng[1] + self.steerTilt * mass * tiltForce
+    outAng[1] = outAng[1] + angVel[1] * mass * self.KeepUprightDrag
+    outAng[1] = outAng[1] + dot * mass * self.KeepUprightForce
+
+    local revForce = self:GetForward() * mass * self.reverseInput * -500
+
+    outLin[1] = outLin[1] + revForce[1]
+    outLin[2] = outLin[2] + revForce[2]
+    outLin[3] = outLin[3] + revForce[3]
 
     -- Wheelie
     local leanBack = self:GetInputBool( 1, "lean_back" )
@@ -218,34 +300,5 @@ function ENT:OnSimulatePhysics( phys, _, outLin, outAng )
         outAng[1] = outAng[1] + a[1]
         outAng[2] = outAng[2] + a[2]
         outAng[3] = outAng[3] + a[3]
-    end
-
-    -- Apply keep upright force depending on how much we are tilting
-    local dot = WORLD_UP:Dot( rt )
-    dot = angles[3] > -90 and angles[3] < 90 and dot or -dot
-
-    local tiltForce = isAnyWheelGrounded and self.TiltForce or self.TiltForce * 0.2
-
-    outAng[1] = outAng[1] + self.steerTilt * mass * tiltForce
-    outAng[1] = outAng[1] + angVel[1] * mass * self.KeepUprightDrag
-    outAng[1] = outAng[1] + dot * mass * self.KeepUprightForce
-
-    local revForce = self:GetForward() * mass * self.reverseInput * -500
-
-    outLin[1] = outLin[1] + revForce[1]
-    outLin[2] = outLin[2] + revForce[2]
-    outLin[3] = outLin[3] + revForce[3]
-
-
-
-    -- Engine force
-    local thrust = self:GetEngineRPM() / ( isAnyWheelGrounded and self:GetThrustReductionFactor() or self:GetAirThrustReductionFactor() )
-    local throttle = self:GetEngineThrottle()
-    if throttle > 0 and speed < self:GetThrustMaxSpeed() then
-        -- Forward acceleration
-        local f = fw * throttle * thrust
-        outLin[1] = outLin[1] + f[1] * mass
-        outLin[2] = outLin[2] + f[2] * mass
-        outLin[3] = outLin[3] + f[3] * mass
     end
 end

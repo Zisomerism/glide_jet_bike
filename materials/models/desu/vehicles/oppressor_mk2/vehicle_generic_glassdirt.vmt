@@ -1,0 +1,22 @@
+"VertexLitGeneric"
+{
+   "$basetexture"         "models\desu\vehicles\oppressor_mk2\vehicle_generic_glassdirt"
+   "$bumpmap"             "models\desu\vehicles\oppressor_mk2\flat_normal_alt2"
+
+   "$phongexponenttexture" "models\desu\vehicles\oppressor_mk2\green" 
+	
+	$phong "1"
+	$phongboost "12"
+	$phongfresnelranges "[0.3 0.75 1.00]"
+	$phongalbedotint "1"
+	$phongexponent       0
+	
+	$nocull 1
+	
+	$additive 1
+	
+	$envmap "env_cubemap"
+	$envmaptint "[0.5 0.5 0.5]"
+	$normalmapalphaenvmapmask 1
+	$envmapfresnel 1
+}

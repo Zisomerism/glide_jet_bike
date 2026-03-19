@@ -1,0 +1,31 @@
+"VertexLitGeneric"
+{
+   "$basetexture"         "models\desu\vehicles\oppressor_mk2\op_jetengine"
+   "$bumpmap"             "models\desu\vehicles\oppressor_mk2\op_jetengine_n"
+
+   "$phongexponenttexture" "models\desu\vehicles\oppressor_mk2\green" 
+	
+	$phong "1"
+	$phongboost "12"
+	$phongfresnelranges "[0.3 0.75 1.00]"
+	$phongalbedotint "1"
+	$phongexponent       0
+	
+	$lightwarptexture "models\desu\vehicles\oppressor_mk2\lightwarp_metallic"
+	
+	$nocull 1
+	$color2 "{120 120 120}"
+
+	"$blendtintbybasealpha" "1"
+ 	"$blendtintcoloroverbase" "0"
+	
+	$envmap "env_cubemap"
+	$envmaptint "[0.5 0.5 0.5]"
+	$normalmapalphaenvmapmask 1
+	$envmapfresnel 0
+
+		"$detail"                   "models\desu\vehicles\oppressor_mk2\Detail_metal7"
+	    "$detailblendfactor"        "0.7"
+	    "$detailscale"              "7"
+		"$detailblendmode"          "0"
+}

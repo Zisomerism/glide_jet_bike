@@ -21,8 +21,15 @@ ENT.UneditableNWVars = {
 function ENT:SetupDataTables()
     BaseClass.SetupDataTables( self )
 
+    self:NetworkVar( "Float", "FlightValue" )
+
     local order = 0
-    local function AddFloatVar( key, min, max, category )
+    self:NetworkVar( "Bool", "EnableHoverBike", {
+        KeyName = "EnableHoverBike",
+        Edit = { type = "Bool", order = order, category = "#glide.editvar.engine" }
+    } )
+
+    local function AddIntVar( key, min, max, category )
         order = order + 1
 
         local editData = Either( 
@@ -30,16 +37,17 @@ function ENT:SetupDataTables()
             nil,
             {
             KeyName = key,
-            Edit = { type = "Float", order = order, min = min, max = max, category = category }
+            Edit = { type = "Int", order = order, min = min, max = max, category = category }
             }
         )
 
-        self:NetworkVar( "Float", key, editData )
+        self:NetworkVar( "Int", key, editData )
     end
 
-    AddFloatVar( "ThrustMaxSpeed", 100, 10000, "#glide.editvar.engine" )
-    AddFloatVar( "AirThrustReductionFactor", 1, 100, "#glide.editvar.engine" )
-    AddFloatVar( "ThrustReductionFactor", 1, 100, "#glide.editvar.engine" )
+    AddIntVar( "ThrustMaxSpeed", 100, 10000, "#glide.editvar.engine" )
+    AddIntVar( "AirThrustReductionFactor", 1, 100, "#glide.editvar.engine" )
+    AddIntVar( "ThrustReductionFactor", 1, 100, "#glide.editvar.engine" )
+
 end
 
 --- Override this base class function.
@@ -81,6 +89,24 @@ if SERVER then
     ENT.WheelieMaxAng = 45
     ENT.WheelieDrag = -15
     ENT.WheelieForce = 550
+
+    ENT.IsHoverActive = false
+    ENT.contactHoverPointCount = 0
+
+    ENT.HoverParams = {
+        linearDrag = Vector( 0.2, 1.5, 2.0 ), -- (Forward, right, up)
+        angularDrag = Vector( -5, -15, -5 ), -- (Roll, pitch, yaw)
+
+        hoverForce = 10,         -- How strong is the hover force on each hover point?
+        hoverDistance = 100,     -- How far from surfaces each hover point has to be for the `hoverForce` to fully apply?
+        hoverZDrag = 0.03,       -- Extra upwards drag to apply on each hover point
+
+        maxSpeed = 1700,        -- Stop applying `engineForce` once the vehicle hits this speed
+        engineForce = 450,
+        turnForce = 900,
+        pitchForce = 600,
+        uprightForce = 600
+    }
 
     --- Override this base class function.
     function ENT:GetAirInputs()
