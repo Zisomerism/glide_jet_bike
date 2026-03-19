@@ -20,9 +20,26 @@ ENT.UneditableNWVars = {
 
 function ENT:SetupDataTables()
     BaseClass.SetupDataTables( self )
-    self:NetworkVar( "Int", "ThrustMaxSpeed" )
-    self:NetworkVar( "Int", "AirThrustReductionFactor" )
-    self:NetworkVar( "Int", "ThrustReductionFactor" )
+
+    local order = 0
+    local function AddFloatVar( key, min, max, category )
+        order = order + 1
+
+        local editData = Either( 
+            category == nil,
+            nil,
+            {
+            KeyName = key,
+            Edit = { type = "Float", order = order, min = min, max = max, category = category }
+            }
+        )
+
+        self:NetworkVar( "Float", key, editData )
+    end
+
+    AddFloatVar( "ThrustMaxSpeed", 100, 10000, "#glide.editvar.engine" )
+    AddFloatVar( "AirThrustReductionFactor", 1, 100, "#glide.editvar.engine" )
+    AddFloatVar( "ThrustReductionFactor", 1, 100, "#glide.editvar.engine" )
 end
 
 --- Override this base class function.
