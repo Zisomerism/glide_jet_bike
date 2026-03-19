@@ -9,6 +9,14 @@ ENT.ChassisModel = "models/desu/vehicles/oppressor_mk2/oppressor_mk2.mdl"
 
 DEFINE_BASECLASS( "base_glide_jetbike" )
 
+ENT.UneditableNWVars = {
+    WheelRadius = true,
+    SuspensionLength = true,
+    PowerDistribution = true,
+    ForwardTractionBias = true,
+    EnableHoverBike = true
+}
+
 -- Override the default first person offset for all seats
 function ENT:GetFirstPersonOffset( _, localEyePos )
     return localEyePos

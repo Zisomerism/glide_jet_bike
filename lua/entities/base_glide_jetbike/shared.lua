@@ -24,16 +24,25 @@ function ENT:SetupDataTables()
     self:NetworkVar( "Float", "FlightValue" )
 
     local order = 0
-    self:NetworkVar( "Bool", "EnableHoverBike", {
-        KeyName = "EnableHoverBike",
-        Edit = { type = "Bool", order = order, category = "#glide.editvar.engine" }
-    } )
+    local uneditable = self.UneditableNWVars
+
+    local function AddBoolVar( key, category )
+        order = order + 1
+
+        self:NetworkVar( "Bool", key, {
+            KeyName = key,
+            Edit = Either(
+            uneditable[key] == true or category == nil,
+            nil,
+            { type = "Bool", order = order, category = category } )
+        } )
+    end
 
     local function AddIntVar( key, min, max, category )
         order = order + 1
 
-        local editData = Either( 
-            category == nil,
+        local editData = Either(
+            uneditable[key] == true or category == nil,
             nil,
             {
             KeyName = key,
@@ -43,7 +52,7 @@ function ENT:SetupDataTables()
 
         self:NetworkVar( "Int", key, editData )
     end
-
+    AddBoolVar( "EnableHoverBike", "#glide.editvar.engine" )
     AddIntVar( "ThrustMaxSpeed", 100, 10000, "#glide.editvar.engine" )
     AddIntVar( "AirThrustReductionFactor", 1, 100, "#glide.editvar.engine" )
     AddIntVar( "ThrustReductionFactor", 1, 100, "#glide.editvar.engine" )

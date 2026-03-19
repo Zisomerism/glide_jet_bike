@@ -10,6 +10,14 @@ ENT.ChassisModel = "models/desu/vehicles/lonewanderer/lonewanderer.mdl"
 
 DEFINE_BASECLASS( "base_glide_jetbike" )
 
+ENT.UneditableNWVars = {
+    WheelRadius = true,
+    SuspensionLength = true,
+    PowerDistribution = true,
+    ForwardTractionBias = true,
+    EnableHoverBike = true
+}
+
 -- Override the default first person offset for all seats
 function ENT:GetFirstPersonOffset( _, localEyePos )
     localEyePos[3] = localEyePos[3] - 4
