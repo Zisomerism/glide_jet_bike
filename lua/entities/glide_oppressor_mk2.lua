@@ -31,12 +31,12 @@ if CLIENT then
     }
 
     ENT.EngineSmokeStrips = {
-        { offset = Vector( -40.2, 0, 23.5 ), angle = Angle( 40, 180, 0 ), width = 2 }
+        { offset = Vector( -30, 0, 14 ), angle = Angle( 40, 180, 0 ), width = 2 }
     }
 
     ENT.EngineFireOffsets = {
-        { offset = Vector( -28, 5, 24 ), angle = Angle( 90, 90, 0 ), scale = 0.4 },
-        { offset = Vector( -10, -5, 10 ), angle = Angle( 90, 270, 0 ), scale = 0.4 }
+        { offset = Vector( -38, 0, 1 ), angle = Angle( 90, 90, 0 ), scale = 0.4 },
+        { offset =  Vector( -30, 0, 14 ), angle = Angle( 90, 270, 0 ), scale = 0.4 }
     }
 
     ENT.LightSprites = {
