@@ -91,10 +91,10 @@ if SERVER then
     ENT.StartupTime = 2
 
     ENT.HoverParams = {
-        linearDrag = Vector( 1, 1.5, 1.5 ), -- (Forward, right, up)
+        linearDrag = Vector( 1.2, 3, 1.5 ), -- (Forward, right, up)
         angularDrag = Vector( -1, -1, -1 ), -- (Roll, pitch, yaw)
 
-        hoverForce = 16,         -- How strong is the hover force on each hover point?
+        hoverForce = 24,         -- How strong is the hover force on each hover point?
         hoverDistance = 100,     -- How far from surfaces each hover point has to be for the `hoverForce` to fully apply?
         hoverZDrag = 0.04,       -- Extra upwards drag to apply on each hover point
 
@@ -157,33 +157,17 @@ if SERVER then
                 }
         } )
 
-        -- Front
-        self:CreateWheel( Vector( 34, 0, -1 ), {
-            steerMultiplier = 1
-        } )
-
-        -- Rear
-        self:CreateWheel( Vector( -34, 0, 2 ) )
-
-        -- Since the model already has a visual representation
-        -- for the wheels, hide the actual wheels.
-        for _, w in ipairs( self.wheels ) do
-            Glide.HideEntity( w, true )
-        end
-
-        self:ChangeWheelRadius( 14 )
-
         -- Calculate local positions on the vehicle where hover forces are applied
         local phys = self:GetPhysicsObject()
         if not IsValid( phys ) then return end
 
         local center = phys:GetMassCenter()
         local mins, maxs = phys:GetAABB()
-        local size = ( maxs - mins ) * 0.5
+        local size = ( maxs - mins ) * 1
 
         local spacingX = 0.5
         local spacingY = 0.4
-        local offsetZ = 0
+        local offsetZ = 18
 
         center[3] = -size[3] * 0.5
 
