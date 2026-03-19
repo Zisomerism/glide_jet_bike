@@ -2,4 +2,4 @@
 
 This is a slightly modified motorcycle vehicle base and three vehicles that use it made for [Glide](https://github.com/StyledStrike/gmod-glide/).
 
-### You can download this on the Steam Workshop [here](https://steamcommunity.com/sharedfiles/filedetails/?id=https://steamcommunity.com/sharedfiles/filedetails/?id=3687122261) and [here](https://steamcommunity.com/sharedfiles/filedetails/?id=3687440190)
+### You can download this on the Steam Workshop [here](https://steamcommunity.com/sharedfiles/filedetails/?id=https://steamcommunity.com/sharedfiles/filedetails/?id=3687122261) and [here](https://steamcommunity.com/sharedfiles/filedetails/?id=3687440190) and [here](https://steamcommunity.com/sharedfiles/filedetails/?id=3687687491)
