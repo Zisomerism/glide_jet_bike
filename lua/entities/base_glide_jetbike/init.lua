@@ -72,6 +72,11 @@ function ENT:OnPostInitialize()
     }
 end
 
+--- Override this base class function.
+function ENT:GetInputGroups( seatIndex )
+    return seatIndex > 1 and { "general_controls" } or self:GetEnableHoverBike() and { "general_controls", "hoverbike_controls" } or { "general_controls", "land_controls" }
+end
+
 function ENT:SetStaySpright( toggle, dontWakePhys )
     self.stayUpright = toggle
 
