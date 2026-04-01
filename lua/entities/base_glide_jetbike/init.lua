@@ -248,7 +248,7 @@ function ENT:OnSimulatePhysics( phys, dt, outLin, outAng )
     angles = self:GetAngles()
     vel = phys:GetVelocity()
     localVel = self:WorldToLocal( phys:GetPos() + vel )
-    speed = localVel[1]
+    local speed = localVel[1]
 
     -- Engine force
     local thrust = self:GetEngineRPM() / ( isAnyWheelGrounded and self:GetThrustReductionFactor() or self:GetAirThrustReductionFactor() )
